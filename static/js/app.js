@@ -38,11 +38,19 @@ d3.json(path).then(function(data) {
     barPlot();
 
     function buildDemo() {
+        metaList = []
         var demoInfo = d3.select('#sample-metadata');
+        var meta1 = meta[0];
+        Object.entries(meta1).forEach(([key, value]) => {
+            metaList.push(`${key}: ${value}`);
+        });
         
+        for (var i=0; i < metaList.length; i++){
+            demoInfo.insert('p').text(metaList[i]);
+        }
     }
 
-    d3.select("#sample-metadata").text(Object.entries(meta[0]))
+    buildDemo();
 })};
 
 init();
