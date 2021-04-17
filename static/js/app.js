@@ -1,29 +1,47 @@
-const path = '../samples.json';
+//Create var for data from json file
+const fullData = data;
 
-// Step 1: Plotly
+// Create variables for different parts of the data to be used later
+var names = fullData.names;
+var meta = fullData.metadata;
+var samples = fullData.samples;
+var otu_ids = samples.map(sample => sample.otu_ids);
+var sampleValues = samples.map(sample => sample.sample_values);
+var otuLabels = samples.map(sample => sample.otu_labels);
+var metaID = meta.map(patient => patient.id);
+var sampleID = samples.map(sample => sample.id);
 
-function init() {
+// Create dropdown list
+names.forEach(function(name) {
+    d3.select("#selDataset").insert('option').property("value", name).text(name);
+});
 
-// Use the D3 library to read in samples.json.
-d3.json(path).then(function(data) {
-    var fullData = data;
-    var names = fullData.names;
-    var meta = fullData.metadata;
-    var samples = fullData.samples;
-    var otu_ids = samples.map(sample => sample.otu_ids);
-    var sampleValues = samples.map(sample => sample.sample_values);
-    var otuLabels = samples.map(sample => sample.otu_labels);
-    console.log("meta for 1st pt", meta[0]);
+// Create event to call value from dropdown list
+// d3.select('#selDataset').on('change', updatePlotly);
+var dropDownMenu = d3.select('#selDataset').node();
+var subjectID = dropDownMenu.value;
+var filteredSamples = samples.filter(sample => sample.id === subjectID);
+var filteredMeta = meta.filter(patient => patient.id === parseInt(subjectID));
+console.log('subject id', subjectID);
 
-    //Create a horizontal bar chart with a dropdown menu to display the 
-    // top 10 OTUs found in that individual.
+// Create init function for default page
+function init(){
+    barChart();
+    buildDemo();
+    // bubbleChart();
+}
+init();
 
+//1. Horizontal bar chart with top 10 OTU_id's and sample value
+function barChart () {
+    // var filteredSamples = samples.filter(samples.map(sample => sample.id) === subjectID);
     var data = [{
-        y: otu_ids[0].slice(0, 10).map((id) => {
+        y: filteredSamples[0].otu_ids.slice(0, 10).map((id) => {
             return `OTU ${id}`}),
-        x: sampleValues[0].slice(0, 10),
+        x: filteredSamples[0].sample_values.slice(0, 10),
         type: "bar",
-        orientation: "h"
+        orientation: "h", 
+        text: filteredSamples[0].otu_labels.slice(0, 10)
     }]
     var layout = {
         title: "OTU Samples",
@@ -32,28 +50,19 @@ d3.json(path).then(function(data) {
             },
         }
     
-    function barPlot(){
-        Plotly.newPlot('bar', data, layout);
+    Plotly.newPlot('bar', data, layout);
+}
+
+// 2. Build Demographic info
+function buildDemo() {
+    metaList = []
+    var demoInfo = d3.select('#sample-metadata');
+    Object.entries(filteredMeta[0]).forEach(([key, value]) => {
+        metaList.push(`${key}: ${value}`);
+    });
+    
+    for (var i=0; i < metaList.length; i++){
+        demoInfo.insert('p').text(metaList[i]);
     }
-    barPlot();
-
-    function buildDemo() {
-        metaList = []
-        var demoInfo = d3.select('#sample-metadata');
-        var meta1 = meta[0];
-        Object.entries(meta1).forEach(([key, value]) => {
-            metaList.push(`${key}: ${value}`);
-        });
-        
-        for (var i=0; i < metaList.length; i++){
-            demoInfo.insert('p').text(metaList[i]);
-        }
-    }
-
-    buildDemo();
-})};
-
-init();
-
-//dropdown value === data.samples[0].id - for the charts
-// === data.metadata.id, maybe use unpack
+    console.log(metaList);
+}
