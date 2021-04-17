@@ -17,7 +17,7 @@ names.forEach(function(name) {
 });
 
 // Create event to call value from dropdown list
-// d3.select('#selDataset').on('change', updatePlotly);
+d3.select('#selDataset').on('change', init);
 var dropDownMenu = d3.select('#selDataset').node();
 var subjectID = dropDownMenu.value;
 var filteredSamples = samples.filter(sample => sample.id === subjectID);
@@ -28,7 +28,7 @@ console.log('subject id', subjectID);
 function init(){
     barChart();
     buildDemo();
-    // bubbleChart();
+    bubbleChart();
 }
 init();
 
@@ -65,4 +65,24 @@ function buildDemo() {
         demoInfo.insert('p').text(metaList[i]);
     }
     console.log(metaList);
+}
+
+// 3. Build bubble chart
+function bubbleChart () {
+    var data = [{
+        x: filteredSamples[0].otu_ids, 
+        y: filteredSamples[0].sample_values,
+        mode: "markers",
+        type: "bubble",
+        marker: {
+            size: filteredSamples[0].sample_values, 
+            color: filteredSamples[0].otu_ids},
+        text: filteredSamples[0].otu_labels
+    }]
+    var layout = {
+        xaxis: {
+            title: "OTU ID"
+        }
+    }
+    Plotly.newPlot("bubble", data, layout);
 }
