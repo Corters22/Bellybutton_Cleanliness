@@ -29,6 +29,7 @@ function init(){
     barChart(initSamples);
     buildDemo(initMeta);
     bubbleChart(initSamples);
+    gaugeChart(initMeta);
 }
 init();
 
@@ -64,7 +65,6 @@ function buildDemo(filteredList) {
     for (var i=0; i < metaList.length; i++){
         demoInfo.insert('p').text(metaList[i]);
     }
-    console.log(metaList);
 }
 
 // 3. Build bubble chart
@@ -86,6 +86,27 @@ function bubbleChart (filteredList) {
     }
     Plotly.newPlot("bubble", data, layout);
 }
+
+//Bonus - build Gauge Chart
+function gaugeChart (filteredList) {
+    var data = [{
+        type: "indicator",
+        mode: "gauge+number",
+        gauge: {
+            axis: {range: [null,9]},
+            
+        },
+        value: filteredList[0].wfreq,
+        title: {text: "Belly Button Washing Frequency", font: {
+            family: "Arial", size: 16, color: "red"
+        }},
+        id: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9"],
+        increasing: {
+            color: "red"
+        }
+    }]
+    Plotly.newPlot('gauge', data)
+};
 
 // 4. Rebuild plots based on event change
 d3.selectAll('#selDataset').on('change', optionChanged);
