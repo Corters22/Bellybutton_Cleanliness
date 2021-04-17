@@ -17,7 +17,7 @@ names.forEach(function(name) {
 });
 
 // Create event to call value from dropdown list
-d3.select('#selDataset').on('change', init);
+
 var dropDownMenu = d3.select('#selDataset').node();
 var subjectID = dropDownMenu.value;
 var filteredSamples = samples.filter(sample => sample.id === subjectID);
@@ -85,4 +85,19 @@ function bubbleChart () {
         }
     }
     Plotly.newPlot("bubble", data, layout);
+}
+
+// 4. Rebuild plots based on event change
+d3.selectAll('#selDataset').on('change', optionChanged);
+function optionChanged () {
+    // d3.event.preventDefault();
+    // Create event to call value from dropdown list
+
+    var dropDownMenu = d3.select('#selDataset').node();
+    var subjectID = dropDownMenu.value;
+    var filteredSamples = samples.filter(sample => sample.id === subjectID);
+    var filteredMeta = meta.filter(patient => patient.id === parseInt(subjectID));
+    console.log("new subject id", subjectID)
+    d3.selectAll('p').text('');
+    Plotly.restyle("bar", )
 }
