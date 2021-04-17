@@ -19,29 +19,29 @@ names.forEach(function(name) {
 // Create event to call value from dropdown list
 
 var dropDownMenu = d3.select('#selDataset').node();
-var subjectID = dropDownMenu.value;
-var filteredSamples = samples.filter(sample => sample.id === subjectID);
-var filteredMeta = meta.filter(patient => patient.id === parseInt(subjectID));
-console.log('subject id', subjectID);
+var initSubjectID = dropDownMenu.value;
+var initSamples = samples.filter(sample => sample.id === initSubjectID);
+var initMeta = meta.filter(patient => patient.id === parseInt(initSubjectID));
+console.log('init subject id', initSubjectID);
 
 // Create init function for default page
 function init(){
-    barChart();
-    buildDemo();
-    bubbleChart();
+    barChart(initSamples);
+    buildDemo(initMeta);
+    bubbleChart(initSamples);
 }
 init();
 
 //1. Horizontal bar chart with top 10 OTU_id's and sample value
-function barChart () {
+function barChart (filteredList) {
     // var filteredSamples = samples.filter(samples.map(sample => sample.id) === subjectID);
     var data = [{
-        y: filteredSamples[0].otu_ids.slice(0, 10).map((id) => {
+        y: filteredList[0].otu_ids.slice(0, 10).map((id) => {
             return `OTU ${id}`}),
-        x: filteredSamples[0].sample_values.slice(0, 10),
+        x: filteredList[0].sample_values.slice(0, 10),
         type: "bar",
         orientation: "h", 
-        text: filteredSamples[0].otu_labels.slice(0, 10)
+        text: filteredList[0].otu_labels.slice(0, 10)
     }]
     var layout = {
         title: "OTU Samples",
@@ -54,10 +54,10 @@ function barChart () {
 }
 
 // 2. Build Demographic info
-function buildDemo() {
+function buildDemo(filteredList) {
     metaList = []
     var demoInfo = d3.select('#sample-metadata');
-    Object.entries(filteredMeta[0]).forEach(([key, value]) => {
+    Object.entries(filteredList[0]).forEach(([key, value]) => {
         metaList.push(`${key}: ${value}`);
     });
     
@@ -68,16 +68,16 @@ function buildDemo() {
 }
 
 // 3. Build bubble chart
-function bubbleChart () {
+function bubbleChart (filteredList) {
     var data = [{
-        x: filteredSamples[0].otu_ids, 
-        y: filteredSamples[0].sample_values,
+        x: filteredList[0].otu_ids, 
+        y: filteredList[0].sample_values,
         mode: "markers",
         type: "bubble",
         marker: {
-            size: filteredSamples[0].sample_values, 
-            color: filteredSamples[0].otu_ids},
-        text: filteredSamples[0].otu_labels
+            size: filteredList[0].sample_values, 
+            color: filteredList[0].otu_ids},
+        text: filteredList[0].otu_labels
     }]
     var layout = {
         xaxis: {
@@ -99,5 +99,8 @@ function optionChanged () {
     var filteredMeta = meta.filter(patient => patient.id === parseInt(subjectID));
     console.log("new subject id", subjectID)
     d3.selectAll('p').text('');
-    Plotly.restyle("bar", )
+    barChart(filteredSamples);
+    buildDemo(filteredMeta);
+    bubbleChart(filteredSamples);
+        
 }
