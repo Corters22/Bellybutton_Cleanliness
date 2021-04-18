@@ -26,5 +26,7 @@ This chart displays how often the subject washed his/her bellybutton per weekend
 ### Bubble Chart
 This also shows the OTUs and the values of the samples. The size of the bubbles coincides with the size of the values and the colors coincide with the OTU ID. If you hover over the bubble, you can see the type of OTUs found in the samples.
 
+[bubble chart](https://github.com/Corters22/plotly-challenge/blob/main/static/images/screen%20shot%20bubble.PNG)
+
 ## Deployment
 You can go directly to the dashboard ![here](https://corters22.github.io/plotly-challenge/)
