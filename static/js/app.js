@@ -42,7 +42,8 @@ function barChart (filteredList) {
         x: filteredList[0].sample_values.slice(0, 10),
         type: "bar",
         orientation: "h", 
-        text: filteredList[0].otu_labels.slice(0, 10)
+        text: filteredList[0].otu_labels.slice(0, 10),
+        marker: {color: "#dc143c"}
     }]
     var layout = {
         title: "OTU Samples",
@@ -93,17 +94,19 @@ function gaugeChart (filteredList) {
         type: "indicator",
         mode: "gauge+number",
         gauge: {
-            axis: {range: [null,9]},
-            
+            axis: {range: [null,9],
+            tickmode: "array",
+            ticktext: [1, 2, 3, 4, 5, 6, 7, 8],
+            nticks: 8,
+            ticks: "inside",
+            tickvals: [1, 2, 3, 4, 5, 6, 7, 8],
+            }
         },
         value: filteredList[0].wfreq,
-        title: {text: "Belly Button Washing Frequency", font: {
-            family: "Arial", size: 16, color: "red"
+        title: {text: "Belly Button Washing<br>Frequency per Week", font: {
+            family: "Arial", size: 30, color: "#228b22"
         }},
-        id: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9"],
-        increasing: {
-            color: "red"
-        }
+        
     }]
     Plotly.newPlot('gauge', data)
 };
@@ -123,5 +126,6 @@ function optionChanged () {
     barChart(filteredSamples);
     buildDemo(filteredMeta);
     bubbleChart(filteredSamples);
+    gaugeChart(filteredMeta);
         
 }
