@@ -29,4 +29,4 @@ This also shows the OTUs and the values of the samples. The size of the bubbles 
 ![bubble chart](static/images/screen%20shot%20bubble.PNG)
 
 ## Deployment
-You can go directly to the dashboard [here](https://corters22.github.io/plotly-challenge/index.html)
+You can go directly to the dashboard [here](https://corters22.github.io/Bellybutton_Cleanliness/index.html)
